@@ -1,1 +1,20 @@
-<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Terminal window -->
+  <rect x="2" y="4" width="20" height="16" rx="2" stroke="#00ff00" stroke-width="2" fill="#000"/>
+  <!-- Window header -->
+  <rect x="2" y="4" width="20" height="4" fill="#00ff00" fill-opacity="0.2"/>
+  <!-- Window controls -->
+  <circle cx="5" cy="6" r="1" fill="#ff5f57"/>
+  <circle cx="8" cy="6" r="1" fill="#ffbd2e"/>
+  <circle cx="11" cy="6" r="1" fill="#28ca42"/>
+  <!-- Terminal content -->
+  <rect x="4" y="10" width="2" height="1" fill="#00ff00"/>
+  <rect x="7" y="10" width="6" height="1" fill="#00ff00"/>
+  <rect x="4" y="12" width="8" height="1" fill="#00ff00"/>
+  <rect x="4" y="14" width="4" height="1" fill="#00ff00"/>
+  <rect x="4" y="16" width="10" height="1" fill="#00ff00"/>
+  <!-- Active cursor -->
+  <rect x="9" y="14" width="1" height="1" fill="#00ff00">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+</svg></svg>

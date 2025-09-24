@@ -30,7 +30,7 @@ export const SnakeGame: React.FC<{ onGameEnd: (score: number) => void }> = ({ on
       }
 
       // Check self collision
-      for (let segment of newSnake) {
+      for (const segment of newSnake) {
         if (head[0] === segment[0] && head[1] === segment[1]) {
           setGameRunning(false);
           onGameEnd(score);

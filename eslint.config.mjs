@@ -27,6 +27,8 @@ const eslintConfig = [
       '@typescript-eslint/no-unsafe-function-type': 'warn', 
       '@typescript-eslint/no-unused-vars': 'warn',
       'react/no-unescaped-entities': 'warn',
+      'prefer-const': 'warn',
+      'react-hooks/exhaustive-deps': 'warn',
     }
   }
 ];

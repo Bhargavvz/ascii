@@ -246,7 +246,7 @@ const NotFoundPage = () => {
 
               {/* Fun facts */}
               <div className={`text-center text-xs opacity-75 ${currentTheme.text}`}>
-                <p>Fun fact: HTTP 404 means "Not Found" - first documented in 1992</p>
+                <p>Fun fact: HTTP 404 means &quot;Not Found&quot; - first documented in 1992</p>
                 <p>This terminal has been running for {Math.floor(Math.random() * 365)} days without errors (until now)</p>
               </div>
             </motion.div>

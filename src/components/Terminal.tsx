@@ -5,6 +5,16 @@ import { motion } from 'framer-motion';
 import { generateASCIIText, createSkillBar, createTreeStructure, matrixEffect } from '@/utils/ascii';
 import { personalInfo, projects, skills, experience, commands, fileSystem } from '@/data/portfolio';
 import { TerminalState } from '@/types/portfolio';
+import AIChat from '@/components/AIChat';
+import CodeEditor from '@/components/CodeEditor';
+import Games from '@/components/Games';
+import AdvancedASCII from '@/components/AdvancedASCII';
+import { SoundControl, useSoundSystem } from '@/components/SoundSystem';
+import { AnalyticsDashboard } from '@/components/Analytics';
+import { AchievementNotification, AchievementPanel, useAchievements } from '@/components/Achievements';
+import { TutorialSystem } from '@/components/TutorialSystem';
+import GeminiDebug from '@/components/GeminiDebug';
+import { getThemeColors, getButtonClass } from '@/utils/theme';
 
 const Terminal: React.FC = () => {
   const [state, setState] = useState<TerminalState>({
@@ -19,6 +29,29 @@ const Terminal: React.FC = () => {
   const [theme, setTheme] = useState('matrix');
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // New feature states
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [showCodeEditor, setShowCodeEditor] = useState(false);
+  const [showGames, setShowGames] = useState(false);
+  const [showASCIIStudio, setShowASCIIStudio] = useState(false);
+  const [showSoundControl, setShowSoundControl] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [showTutorials, setShowTutorials] = useState(false);
+  const [showGeminiDebug, setShowGeminiDebug] = useState(false);
+
+  // Hooks for new features
+  const { playSound, isEnabled: audioEnabled } = useSoundSystem();
+  const {
+    achievements,
+    stats,
+    newAchievement,
+    trackCommand,
+    trackThemeChange,
+    trackEvent,
+    dismissNewAchievement
+  } = useAchievements();
 
   const themes = {
     matrix: {
@@ -271,6 +304,15 @@ const Terminal: React.FC = () => {
     
     addOutput([`${state.currentPath} $ ${command}`]);
     
+    // Track command for achievements
+    const isCommandError = false; // We'll set this based on command success
+    trackCommand(cmd.toLowerCase(), isCommandError);
+    
+    // Play sound effect
+    if (audioEnabled) {
+      playSound('keypress');
+    }
+    
     // Simulate command processing delay
     await new Promise(resolve => setTimeout(resolve, 100));
     
@@ -371,6 +413,7 @@ const Terminal: React.FC = () => {
           ]);
         } else {
           setTheme(arg);
+          trackThemeChange(arg);
           addOutput([`Theme changed to: ${arg}`]);
         }
         break;
@@ -397,6 +440,7 @@ const Terminal: React.FC = () => {
           try {
             const art = await generateASCIIText(text, { font: font || 'ANSI Shadow' });
             addOutput([art]);
+            trackEvent('ascii_generated');
           } catch (error) {
             addOutput(['ascii: error generating art']);
           }
@@ -423,13 +467,102 @@ const Terminal: React.FC = () => {
         };
         addOutput([createTreeStructure(treeData)]);
         break;
+
+      // New feature commands
+      case 'ai':
+      case 'chat':
+        setShowAIChat(true);
+        addOutput(['AI Chat Assistant opened']);
+        trackEvent('ai_chat');
+        break;
+        
+      case 'code':
+      case 'editor':
+      case 'ide':
+        setShowCodeEditor(true);
+        addOutput(['Code Editor opened']);
+        break;
+        
+      case 'games':
+      case 'play':
+        setShowGames(true);
+        addOutput(['Games menu opened']);
+        trackEvent('game_started');
+        break;
+        
+      case 'studio':
+      case 'asciiart':
+        setShowASCIIStudio(true);
+        addOutput(['ASCII Art Studio opened']);
+        trackEvent('studio_opened');
+        break;
+        
+      case 'sound':
+      case 'audio':
+        setShowSoundControl(true);
+        addOutput(['Sound Control opened']);
+        trackEvent('sound_toggled');
+        break;
+        
+      case 'analytics':
+      case 'stats':
+        setShowAnalytics(true);
+        addOutput(['Analytics Dashboard opened']);
+        trackEvent('analytics_viewed');
+        break;
+        
+      case 'achievements':
+      case 'trophies':
+        setShowAchievements(true);
+        addOutput(['Achievements panel opened']);
+        break;
+        
+      case 'tutorial':
+      case 'help-me':
+      case 'guide':
+        setShowTutorials(true);
+        addOutput(['Interactive Tutorial opened']);
+        break;
+        
+      case 'debug':
+      case 'api-debug':
+      case 'gemini-debug':
+        setShowGeminiDebug(true);
+        addOutput(['Gemini API Debug panel opened']);
+        break;
+        
+      case 'features':
+      case 'new':
+        addOutput([
+          'NEW FEATURES AVAILABLE:',
+          '═'.repeat(50),
+          'ai/chat      - AI-powered assistant',
+          'code/editor  - Real-time code editor with AI',
+          'games/play   - Interactive terminal games',
+          'studio       - Advanced ASCII art creator',
+          'sound/audio  - Sound system controls',
+          'analytics    - Live portfolio analytics',
+          'achievements - Achievement system',
+          'tutorial     - Interactive tutorials',
+          '',
+          'Try any of these commands to explore new features!'
+        ]);
+        break;
         
       default:
         addOutput([`Command not found: ${cmd}. Type 'help' for available commands.`]);
+        trackCommand(cmd.toLowerCase(), true); // Mark as error
+        if (audioEnabled) {
+          playSound('error');
+        }
         break;
     }
     
     setState(prev => ({ ...prev, isLoading: false }));
+    
+    if (audioEnabled && cmd !== 'clear') {
+      playSound('success', 0.3);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -453,13 +586,14 @@ const Terminal: React.FC = () => {
       );
       if (matches.length === 1) {
         setInput(matches[0].name + ' ');
+        trackEvent('tab_completion');
       }
     }
   };
 
   return (
-    <div className={`min-h-screen ${currentTheme.bg} ${currentTheme.text} font-mono`}>
-      <div className="container mx-auto p-2 sm:p-4 max-w-6xl">
+    <div className={`min-h-screen ${currentTheme.bg} ${currentTheme.text} font-mono flex items-center justify-center py-4`}>
+      <div className="w-full max-w-6xl mx-auto px-2 sm:px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -533,18 +667,169 @@ const Terminal: React.FC = () => {
         </motion.div>
         
         <div className="mt-4 text-center text-xs sm:text-sm opacity-75 px-4">
-          <p className="mb-2">Made with ❤️ using ASCII art and terminal interfaces</p>
-          <div className="flex flex-wrap justify-center gap-2 text-xs">
-            <span className="bg-opacity-20 bg-white px-2 py-1 rounded">help</span>
-            <span className="bg-opacity-20 bg-white px-2 py-1 rounded">ls</span>
-            <span className="bg-opacity-20 bg-white px-2 py-1 rounded">projects</span>
-            <span className="bg-opacity-20 bg-white px-2 py-1 rounded">skills</span>
-            <span className="bg-opacity-20 bg-white px-2 py-1 rounded">contact</span>
-            <span className="bg-opacity-20 bg-white px-2 py-1 rounded">matrix</span>
-            <span className="bg-opacity-20 bg-white px-2 py-1 rounded">theme</span>
+          <p className="mb-2">Made with love using ASCII art and terminal interfaces</p>
+          <div className="flex flex-wrap justify-center gap-2 text-xs mb-4">
+            <span className={`px-2 py-1 rounded ${getThemeColors(theme).secondary} ${currentTheme.text} border ${currentTheme.border}`}>help</span>
+            <span className={`px-2 py-1 rounded ${getThemeColors(theme).secondary} ${currentTheme.text} border ${currentTheme.border}`}>features</span>
+            <span className={`px-2 py-1 rounded ${getThemeColors(theme).secondary} ${currentTheme.text} border ${currentTheme.border}`}>ai</span>
+            <span className={`px-2 py-1 rounded ${getThemeColors(theme).secondary} ${currentTheme.text} border ${currentTheme.border}`}>games</span>
+            <span className={`px-2 py-1 rounded ${getThemeColors(theme).secondary} ${currentTheme.text} border ${currentTheme.border}`}>code</span>
+            <span className={`px-2 py-1 rounded ${getThemeColors(theme).secondary} ${currentTheme.text} border ${currentTheme.border}`}>tutorial</span>
           </div>
+          
+          {/* Interface Controls */}
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
+            <button
+              onClick={() => setShowAIChat(!showAIChat)}
+              className={`${getButtonClass(theme, 'primary')} text-xs`}
+              title="AI Chat Assistant"
+            >
+              AI
+            </button>
+            <button
+              onClick={() => setShowCodeEditor(!showCodeEditor)}
+              className={`${getButtonClass(theme, 'primary')} text-xs`}
+              title="Code Editor"
+            >
+              Code
+            </button>
+            <button
+              onClick={() => setShowGames(!showGames)}
+              className={`${getButtonClass(theme, 'primary')} text-xs`}
+              title="Games"
+            >
+              Games
+            </button>
+            <button
+              onClick={() => setShowASCIIStudio(!showASCIIStudio)}
+              className={`${getButtonClass(theme, 'primary')} text-xs`}
+              title="ASCII Art Studio"
+            >
+              Art
+            </button>
+            <button
+              onClick={() => setShowSoundControl(!showSoundControl)}
+              className={`${getButtonClass(theme, 'primary')} text-xs`}
+              title="Sound Control"
+            >
+              Sound
+            </button>
+            <button
+              onClick={() => setShowAnalytics(!showAnalytics)}
+              className={`${getButtonClass(theme, 'primary')} text-xs`}
+              title="Analytics"
+            >
+              Stats
+            </button>
+            <button
+              onClick={() => setShowAchievements(!showAchievements)}
+              className={`${getButtonClass(theme, 'primary')} text-xs`}
+              title="Achievements"
+            >
+              Achievements
+            </button>
+            <button
+              onClick={() => setShowGeminiDebug(!showGeminiDebug)}
+              className={`${getButtonClass(theme, 'primary')} text-xs`}
+              title="Debug Gemini API"
+            >
+              Debug
+            </button>
+          </div>
+          
+          {/* Live Data Feed */}
+          {/* Analytics data removed - no fake visitor counts */}
         </div>
       </div>
+      
+      {/* All Feature Components */}
+      {showAIChat && (
+        <AIChat
+          isVisible={showAIChat}
+          onToggle={() => setShowAIChat(false)}
+          theme={theme}
+          currentContext={state.currentPath}
+        />
+      )}
+      
+      {showCodeEditor && (
+        <CodeEditor
+          isVisible={showCodeEditor}
+          onToggle={() => setShowCodeEditor(false)}
+          theme={theme}
+        />
+      )}
+      
+      {showGames && (
+        <Games
+          isVisible={showGames}
+          onToggle={() => setShowGames(false)}
+          theme={theme}
+          onAchievement={(achievement) => trackEvent('high_score', { score: 100 })}
+        />
+      )}
+      
+      {showASCIIStudio && (
+        <AdvancedASCII
+          isVisible={showASCIIStudio}
+          onToggle={() => setShowASCIIStudio(false)}
+          theme={theme}
+        />
+      )}
+      
+      {showSoundControl && (
+        <SoundControl
+          isVisible={showSoundControl}
+          onToggle={() => setShowSoundControl(false)}
+          theme={theme}
+        />
+      )}
+      
+      {showAnalytics && (
+        <AnalyticsDashboard
+          isVisible={showAnalytics}
+          onToggle={() => setShowAnalytics(false)}
+          theme={theme}
+        />
+      )}
+      
+      {showAchievements && (
+        <AchievementPanel
+          isVisible={showAchievements}
+          onToggle={() => setShowAchievements(false)}
+          achievements={achievements}
+          stats={stats}
+          theme={theme}
+        />
+      )}
+      
+      {showTutorials && (
+        <TutorialSystem
+          isVisible={showTutorials}
+          onToggle={() => setShowTutorials(false)}
+          theme={theme}
+          onCommandSuggestion={(cmd) => {
+            setInput(cmd);
+            setShowTutorials(false);
+          }}
+          onTutorialCompleted={() => trackEvent('tutorial_completed')}
+        />
+      )}
+      
+      {showGeminiDebug && (
+        <GeminiDebug
+          isVisible={showGeminiDebug}
+          onToggle={() => setShowGeminiDebug(false)}
+          theme={theme}
+        />
+      )}
+      
+      {/* Achievement Notification */}
+      <AchievementNotification
+        achievement={newAchievement}
+        onDismiss={dismissNewAchievement}
+        theme={theme}
+      />
     </div>
   );
 };

@@ -1,222 +1,187 @@
 import { PersonalInfo, Project, Skill, Experience, Command } from '@/types/portfolio';
 
 export const personalInfo: PersonalInfo = {
-  name: "Alex Thompson",
-  title: "Full Stack Developer & DevOps Engineer",
-  bio: "Passionate developer with 5+ years of experience building scalable web applications and ML systems. Enthusiast of clean code, automation, and innovative terminal interfaces. Always exploring the intersection of technology and user experience.",
-  location: "San Francisco, CA",
+  name: "Guduru Bhavana Reddy",
+  title: "B.Tech Computer Science Student & Full Stack Developer",
+  bio: "Passionate Computer Science student with expertise in Machine Learning, Web Development, and Software Engineering. Currently pursuing B.Tech at CMR College of Engineering & Technology with hands-on experience in Python, React, and AI/ML projects.",
+  location: "Medchal, Hyderabad, Telangana, India",
   contact: {
-    email: "alex.thompson@developer.com",
-    github: "https://github.com/alex-dev",
-    linkedin: "https://linkedin.com/in/alex-thompson-dev",
-    website: "https://alexthompson.dev"
+    email: "bhavanareddy240205@gmail.com",
+    github: "https://github.com/bhavvzs",
+    linkedin: "https://linkedin.com/in/bhavana-guduru",
+    website: "https://bhavana-portfolio.vercel.app"
   }
 };
 
 export const skills: Skill[] = [
-  { name: "JavaScript", level: 95, category: "Programming" },
-  { name: "TypeScript", level: 90, category: "Programming" },
-  { name: "React", level: 88, category: "Frontend" },
-  { name: "Next.js", level: 85, category: "Frontend" },
+  { name: "Python", level: 95, category: "Programming" },
+  { name: "JavaScript", level: 88, category: "Programming" },
+  { name: "TypeScript", level: 85, category: "Programming" },
+  { name: "Java", level: 80, category: "Programming" },
+  { name: "C", level: 75, category: "Programming" },
+  { name: "React", level: 90, category: "Frontend" },
+  { name: "HTML/CSS", level: 92, category: "Frontend" },
+  { name: "Tailwind CSS", level: 88, category: "Frontend" },
   { name: "Node.js", level: 82, category: "Backend" },
-  { name: "Python", level: 80, category: "Programming" },
-  { name: "PostgreSQL", level: 75, category: "Database" },
-  { name: "MongoDB", level: 70, category: "Database" },
-  { name: "Docker", level: 68, category: "DevOps" },
-  { name: "AWS", level: 65, category: "Cloud" }
+  { name: "Express.js", level: 80, category: "Backend" },
+  { name: "Flask", level: 85, category: "Backend" },
+  { name: "Spring Boot", level: 75, category: "Backend" },
+  { name: "TensorFlow", level: 90, category: "Machine Learning" },
+  { name: "OpenCV", level: 85, category: "Machine Learning" },
+  { name: "CNN", level: 88, category: "Machine Learning" },
+  { name: "MySQL", level: 80, category: "Database" },
+  { name: "PostgreSQL", level: 78, category: "Database" },
+  { name: "MongoDB", level: 82, category: "Database" },
+  { name: "Supabase", level: 85, category: "Database" },
+  { name: "Firebase", level: 80, category: "Database" }
 ];
 
 export const projects: Project[] = [
   {
-    id: "ascii-portfolio",
-    name: "ASCII Art Portfolio Terminal",
-    description: "An innovative terminal-style portfolio that showcases projects through ASCII art and interactive command-line interface. Features real-time ASCII generation, multiple themes, and a fully functional file system simulator.",
-    technologies: ["Next.js 15", "TypeScript", "Tailwind CSS", "FIGlet", "Framer Motion", "React Hooks"],
-    githubUrl: "https://github.com/ascii-dev/ascii-portfolio",
-    liveUrl: "https://ascii-portfolio.vercel.app",
+    id: "mask-detection",
+    name: "Mask Detection System",
+    description: "Engineered an end-to-end mask detection system achieving 97% accuracy by leveraging transfer learning on MobileNetV2 architecture. Trained on over 8,000 face images, applying data augmentation to improve accuracy by 15%.",
+    technologies: ["Python", "TensorFlow", "OpenCV", "Flask", "REST API", "Machine Learning"],
+    githubUrl: "https://github.com/bhavvzs/MaskDetection",
     features: [
-      "Interactive terminal interface with 20+ commands",
-      "Real-time ASCII art generation using FIGlet",
-      "File system navigation simulation",
-      "Multiple color themes (Matrix, Amber, Blue, Classic)",
-      "Responsive design optimized for all devices",
-      "Command history and tab completion",
-      "Matrix effect easter egg",
-      "Typewriter animations and smooth transitions",
-      "SEO optimized with proper metadata"
-    ],
-    architecture: `
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   ASCII Utils   │    │   Data Layer    │
-│   (Next.js 15)  │◄──►│   (FIGlet API)  │◄──►│   (TypeScript)  │
-│   - Terminal UI │    │   - Art Gen     │    │   - Portfolio   │
-│   - Animations  │    │   - Themes      │    │   - File System │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Components    │    │   Utilities     │    │   State Mgmt    │
-│   - Terminal    │    │   - Commands    │    │   - React State │
-│   - ASCII Art   │    │   - File Ops    │    │   - Local Cache │
-│   - Loading     │    │   - Animations  │    │   - Theme Store │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-    `
-  },
-  {
-    id: "fullstack-ecommerce",
-    name: "Enterprise E-Commerce Platform",
-    description: "Scalable full-stack e-commerce solution with microservices architecture, real-time inventory management, and advanced analytics. Handles 100k+ daily transactions with 99.9% uptime.",
-    technologies: ["Node.js", "Express", "React", "PostgreSQL", "Redis", "Docker", "Kubernetes", "AWS", "Stripe API"],
-    githubUrl: "https://github.com/ascii-dev/fullstack-ecommerce",
-    liveUrl: "https://ecommerce-demo.example.com",
-    features: [
-      "JWT-based authentication with refresh tokens",
-      "Advanced product catalog with search & filters",
-      "Real-time order tracking and notifications",
-      "Multi-vendor marketplace support",
-      "Stripe payment integration with webhook handling",
-      "Admin dashboard with analytics & reports",
-      "Automated inventory management",
-      "RESTful API with comprehensive documentation",
-      "CI/CD pipeline with automated testing",
-      "Redis caching for improved performance"
-    ],
-    architecture: `
-┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
-│   Auth   │   │ Products │   │  Orders  │   │ Payment  │
-│ Service  │   │ Service  │   │ Service  │   │ Service  │
-│  :3001   │   │  :3002   │   │  :3003   │   │  :3004   │
-└────┬─────┘   └────┬─────┘   └────┬─────┘   └────┬─────┘
-     │              │              │              │
-     └──────────────┼──────────────┼──────────────┘
-                    │              │
-            ┌───────▼──────────────▼───────┐
-            │     API Gateway (Nginx)     │
-            │         Load Balancer       │
-            └─────────────┬───────────────┘
-                          │
-            ┌─────────────▼───────────────┐
-            │     React Frontend          │
-            │   (Next.js with SSR)        │
-            └─────────────────────────────┘
-    `
-  },
-  {
-    id: "ai-image-classifier",
-    name: "AI-Powered Image Classification System",
-    description: "Deep learning model for real-time image classification with 96.5% accuracy. Features custom CNN architecture, data augmentation pipeline, and scalable inference API with model versioning.",
-    technologies: ["Python", "TensorFlow", "Keras", "OpenCV", "FastAPI", "Docker", "MLflow", "AWS S3", "PostgreSQL"],
-    githubUrl: "https://github.com/ascii-dev/ai-image-classifier",
-    liveUrl: "https://ml-classifier-api.example.com",
-    features: [
-      "Custom CNN architecture with attention mechanisms",
-      "Real-time image preprocessing pipeline",
-      "Batch processing for bulk classification",
-      "Model versioning and A/B testing framework",
-      "RESTful API with FastAPI and automatic docs",
-      "Performance monitoring and drift detection",
-      "Data augmentation with custom transforms",
-      "Confidence scoring and uncertainty estimation",
-      "Docker containerization for easy deployment",
-      "Integration with cloud storage and databases"
+      "97% accuracy using MobileNetV2 transfer learning",
+      "Trained on 8,000+ face images with data augmentation",
+      "Real-time mask detection from camera feed",
+      "RESTful API endpoints with Flask",
+      "Handles 50+ requests per minute",
+      "Average response time of 120ms",
+      "Data augmentation improving accuracy by 15%",
+      "Optimized for deployment and scalability"
     ],
     architecture: `
 ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-│   Image     │──►│ Preprocessing│──►│   Model     │
-│   Upload    │   │   Pipeline   │   │ Inference   │
-│   (FastAPI) │   │  (OpenCV)    │   │(TensorFlow) │
+│   Camera    │──►│ Face Detection│──►│ Mask Predict│
+│   Input     │   │   (OpenCV)   │   │ (MobileNet) │
 └─────────────┘   └─────────────┘   └─────────────┘
        │                 │                 │
        ▼                 ▼                 ▼
 ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-│  Validation │   │ Data Aug &  │   │ Post Proc & │
-│  & Storage  │   │ Transforms  │   │ Confidence  │
-│   (AWS S3)  │   │  Pipeline   │   │   Scoring   │
+│ Preprocessing│   │ Data Augment│   │ Results API │
+│  & Scaling  │   │ & Training  │   │   (Flask)   │
 └─────────────┘   └─────────────┘   └─────────────┘
-       │                                   │
-       ▼                                   ▼
-┌─────────────────────────────────────────────────┐
-│           Results Database (PostgreSQL)        │
-│        MLflow Model Registry & Tracking        │
-└─────────────────────────────────────────────────┘
     `
   },
   {
-    id: "devops-automation",
-    name: "DevOps Automation Suite",
-    description: "Comprehensive DevOps automation platform with CI/CD pipelines, infrastructure as code, monitoring, and automated deployment strategies. Reduces deployment time by 80% and improves reliability.",
-    technologies: ["Terraform", "Ansible", "Jenkins", "Docker", "Kubernetes", "Prometheus", "Grafana", "AWS", "Python", "Bash"],
-    githubUrl: "https://github.com/ascii-dev/devops-automation",
+    id: "hand-sign-recognition",
+    name: "Hand Sign Recognition System",
+    description: "Developed a real-time hand sign recognition system achieving 94% accuracy using TensorFlow and CNN architecture. Processed and augmented over 10,000 hand gesture images to train a robust model capable of recognizing 25+ distinct sign language gestures.",
+    technologies: ["Python", "TensorFlow", "OpenCV", "Flask", "HTML/CSS", "CNN"],
+    githubUrl: "https://github.com/bhavvzs/HandSignDetection",
     features: [
-      "Infrastructure as Code with Terraform",
-      "Automated CI/CD pipelines with Jenkins",
-      "Blue-green deployment strategies",
-      "Container orchestration with Kubernetes",
-      "Application and infrastructure monitoring",
-      "Automated backup and disaster recovery",
-      "Security scanning and compliance checks",
-      "Cost optimization and resource management",
-      "Multi-environment management (dev/staging/prod)",
-      "Slack integration for notifications"
+      "94% accuracy using CNN architecture",
+      "Recognizes 25+ distinct sign language gestures",
+      "Real-time processing at 30+ FPS",
+      "Trained on 10,000+ hand gesture images",
+      "Optimized inference time reduced by 40%",
+      "Responsive Flask web application",
+      "Model optimization with quantization and pruning",
+      "Accessible to 100+ daily users"
     ],
     architecture: `
 ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-│  Developer  │──►│  Git Repo   │──►│  Jenkins    │
-│    Push     │   │  (GitHub)   │   │  Pipeline   │
+│  Video Feed │──►│ Hand Detect  │──►│ Gesture     │
+│  (Camera)   │   │  (OpenCV)   │   │ Recognition │
 └─────────────┘   └─────────────┘   └─────────────┘
-                                           │
-                                           ▼
+       │                 │                 │
+       ▼                 ▼                 ▼
 ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-│  Terraform  │◄──│   Build &   │──►│   Docker    │
-│   Deploy    │   │    Test     │   │   Registry  │
+│ Frame Proc  │   │ CNN Model   │   │ Web Interface│
+│ & Feature   │   │ Training    │   │   (Flask)   │
+│ Extraction  │   │ Pipeline    │   │             │
 └─────────────┘   └─────────────┘   └─────────────┘
-       │                                   │
-       ▼                                   ▼
-┌─────────────┐                    ┌─────────────┐
-│ Kubernetes  │                    │ Monitoring  │
-│  Cluster    │◄───────────────────│ (Prometheus │
-│ (AWS EKS)   │                    │ + Grafana)  │
-└─────────────┘                    └─────────────┘
+    `
+  },
+  {
+    id: "modern-blog",
+    name: "ModernBlog",
+    description: "Built a full-stack blogging platform with 98% test coverage and optimized page load speed by 60%. Implemented a secure authentication system supporting three OAuth providers, leading to a 40% increase in user sign-ups.",
+    technologies: ["React", "Supabase", "TypeScript", "Tailwind CSS", "OAuth"],
+    githubUrl: "https://github.com/bhavvzs/ModernBlog",
+    features: [
+      "98% test coverage with comprehensive testing",
+      "Page load speed optimized by 60%",
+      "Secure authentication with 3 OAuth providers",
+      "40% increase in user sign-ups",
+      "Mobile-responsive design with Tailwind CSS",
+      "35% boost in mobile engagement",
+      "25% reduction in bounce rates",
+      "Real-time blog editing and publishing",
+      "SEO optimized content management"
+    ],
+    architecture: `
+┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+│   React     │──►│  Supabase   │──►│   OAuth     │
+│  Frontend   │   │  Backend    │   │ Providers   │
+└─────────────┘   └─────────────┘   └─────────────┘
+       │                 │                 │
+       ▼                 ▼                 ▼
+┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+│ Tailwind UI │   │ Real-time   │   │ Content     │
+│ Components  │   │ Database    │   │ Management  │
+└─────────────┘   └─────────────┘   └─────────────┘
+    `
+  },
+  {
+    id: "ascii-portfolio",
+    name: "ASCII Portfolio Terminal",
+    description: "Current interactive ASCII terminal portfolio showcasing projects through command-line interface with AI integration, games, and real-time features.",
+    technologies: ["Next.js 15", "TypeScript", "Tailwind CSS", "Gemini AI", "Monaco Editor", "Framer Motion"],
+    githubUrl: "https://github.com/bhavvzs/ascii-portfolio",
+    features: [
+      "Interactive terminal with 20+ commands",
+      "AI-powered chat assistant",
+      "Real-time code editor with Monaco",
+      "Interactive games (Snake, Tetris, Memory)",
+      "Advanced ASCII art generation",
+      "Sound integration and effects",
+      "Achievement system",
+      "Mobile responsive design",
+      "Multiple terminal themes"
+    ],
+    architecture: `
+┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+│   Terminal  │──►│   AI Chat   │──►│ Code Editor │
+│ Interface   │   │  (Gemini)   │   │  (Monaco)   │
+└─────────────┘   └─────────────┘   └─────────────┘
+       │                 │                 │
+       ▼                 ▼                 ▼
+┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+│   Games &   │   │ ASCII Art & │   │ Sound &     │
+│ Achievements│   │ Animations  │   │ Effects     │
+└─────────────┘   └─────────────┘   └─────────────┘
     `
   }
 ];
 
 export const experience: Experience[] = [
   {
-    company: "Tech Innovations Inc.",
-    position: "Senior Full Stack Developer",
-    duration: "2022 - Present",
+    company: "Internshala",
+    position: "Internshala Student Partner",
+    duration: "Jan 2025 - Mar 2025",
     description: [
-      "Led development of microservices architecture serving 100k+ daily users",
-      "Implemented CI/CD pipelines reducing deployment time by 60%",
-      "Mentored junior developers and conducted code reviews",
-      "Architected scalable solutions using cloud-native technologies"
+      "Promoted Internshala's internship and training programs among college students, helping them explore career opportunities and upskill through various courses",
+      "Organized and led interactive sessions, webinars, and workshops in collaboration with faculty members to introduce students to Internshala's platform and internship opportunities",
+      "Provided mentorship and guidance to students regarding resume building, internship applications, and skill enhancement",
+      "Successfully engaged with 200+ students through various outreach activities and programs"
     ],
-    technologies: ["React", "Node.js", "AWS", "Docker", "Kubernetes"]
+    technologies: ["Communication", "Leadership", "Event Management", "Mentoring"]
   },
   {
-    company: "StartupXYZ",
-    position: "Frontend Developer",
-    duration: "2020 - 2022",
+    company: "CMR College of Engineering & Technology",
+    position: "HackFest 2025 Volunteer",
+    duration: "Mar 2025",
     description: [
-      "Built responsive web applications using modern JavaScript frameworks",
-      "Optimized application performance achieving 95+ Lighthouse scores",
-      "Collaborated with design team to implement pixel-perfect UIs",
-      "Integrated third-party APIs and payment processing systems"
+      "Provided technical mentorship to 50+ participants across 15 teams during the 36-hour hackathon event",
+      "Assisted teams with problem-solving and debugging while coordinating event logistics, including participant registration, workshop setup, and judging processes",
+      "Collaborated with a team of 10 volunteers to ensure smooth operations and a positive participant experience",
+      "Facilitated knowledge sharing sessions and helped teams overcome technical challenges"
     ],
-    technologies: ["Vue.js", "TypeScript", "Tailwind CSS", "Firebase"]
-  },
-  {
-    company: "Digital Agency Co.",
-    position: "Junior Developer",
-    duration: "2019 - 2020",
-    description: [
-      "Developed client websites using HTML, CSS, and JavaScript",
-      "Maintained WordPress sites and custom plugins",
-      "Participated in agile development processes",
-      "Learned modern development practices and version control"
-    ],
-    technologies: ["HTML", "CSS", "JavaScript", "WordPress", "Git"]
+    technologies: ["Technical Mentoring", "Event Coordination", "Team Leadership", "Problem Solving"]
   }
 ];
 

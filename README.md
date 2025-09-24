@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ASCII Portfolio Terminal 🖥️
 
-## Getting Started
+An innovative and interactive terminal-style portfolio that showcases projects through ASCII art and a fully functional command-line interface. Built with modern web technologies while maintaining the nostalgic feel of classic terminal interfaces.
 
-First, run the development server:
+![ASCII Portfolio Demo](https://via.placeholder.com/800x400/000000/00FF00?text=ASCII+PORTFOLIO+TERMINAL)
+
+## ✨ Features
+
+### 🎨 ASCII Art & Terminal Interface
+- **Real-time ASCII art generation** using FIGlet with multiple font styles
+- **Interactive terminal emulator** with 20+ working commands
+- **File system simulation** with navigable directories
+- **Multiple color themes** (Matrix, Amber, Blue, Classic)
+- **Command history** and tab completion
+- **Typewriter animations** and smooth transitions
+
+### 🚀 Modern Web Technologies
+- **Next.js 15** with App Router and Turbopack
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **Framer Motion** for animations
+- **Responsive design** optimized for all devices
+- **SEO optimized** with proper metadata
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/your-username/ascii-portfolio.git
+
+# Navigate to project directory
+cd ascii-portfolio
+
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Available Commands in Terminal
+```bash
+# Navigation
+ls              # List directory contents
+cd <path>       # Change directory
+pwd             # Print working directory
+cat <file>      # Display file contents
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Portfolio
+projects        # Show all projects
+projects <id>   # View specific project details
+skills          # Display technical skills
+experience      # Show work experience
+contact         # Display contact information
+whoami          # Show personal information
 
-## Learn More
+# Utilities
+help            # Show all commands
+clear           # Clear terminal screen
+theme <name>    # Change color theme (matrix/amber/blue/classic)
+ascii <text>    # Generate ASCII art
+matrix          # Easter egg - Matrix effect
+tree            # Show directory structure
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🎨 Customization
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Adding Your Content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Update Personal Information**
+   ```typescript
+   // src/data/portfolio.ts
+   export const personalInfo: PersonalInfo = {
+     name: "Your Name",
+     title: "Your Title",
+     bio: "Your bio...",
+     // ...
+   };
+   ```
 
-## Deploy on Vercel
+2. **Add Your Projects**
+   ```typescript
+   // src/data/portfolio.ts
+   export const projects: Project[] = [
+     {
+       id: "your-project",
+       name: "Project Name",
+       description: "Project description...",
+       technologies: ["Tech1", "Tech2"],
+       // ...
+     }
+   ];
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔧 Technical Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Frontend**: Next.js 15, React, TypeScript
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **ASCII Art**: FIGlet
+- **Development**: Turbopack, ESLint
+
+## 📱 Features
+
+- ✅ Fully responsive design
+- ✅ Multiple color themes
+- ✅ Interactive terminal commands
+- ✅ ASCII art generation
+- ✅ File system simulation
+- ✅ Command history
+- ✅ Tab completion
+- ✅ Keyboard shortcuts
+- ✅ Loading animations
+- ✅ SEO optimized
+
+## 📞 Contact
+
+This portfolio template was created to showcase modern web development skills through a unique terminal interface. Feel free to customize it for your own use!
+
+---
+
+<div align="center">
+  <p>Made with ❤️ and lots of ASCII art</p>
+  <p>⭐ Star this repo if you found it helpful!</p>
+</div>

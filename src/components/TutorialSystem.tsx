@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { getThemeColors, getButtonClass } from '@/utils/theme';
 
 interface TutorialStep {
@@ -357,7 +357,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
                 <ul className="text-sm space-y-1 opacity-75">
                   <li>• Use the up/down arrow keys to browse command history</li>
                   <li>• Press Tab for command auto-completion</li>
-                  <li>• Type "help" anytime to see available commands</li>
+                  <li>• Type &quot;help&quot; anytime to see available commands</li>
                   <li>• Press Ctrl+/ to see keyboard shortcuts</li>
                 </ul>
               </div>

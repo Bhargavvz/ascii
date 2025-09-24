@@ -849,32 +849,32 @@ export const AchievementPanel: React.FC<AchievementPanelProps> = ({
         {/* Achievements Grid */}
         <div className="flex-1 p-4 overflow-y-auto">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredAchievements.map((achievement: Achievement) => (
+            {filteredAchievements.map((achievementItem: Achievement) => (
               <motion.div
-                key={achievement.id}
+                key={achievementItem.id}
                 className={`border-2 ${
-                  achievement.unlocked 
-                    ? rarityColors[achievement.rarity] 
+                  achievementItem.unlocked 
+                    ? rarityColors[achievementItem.rarity as keyof typeof rarityColors] 
                     : 'border-gray-600 opacity-50'
                 } rounded-lg p-4 text-center transition-all hover:scale-105`}
                 whileHover={{ scale: 1.05 }}
               >
-                <div className={`text-3xl mb-2 ${achievement.unlocked ? '' : 'grayscale'}`}>
-                  {achievement.icon}
+                <div className={`text-3xl mb-2 ${achievementItem.unlocked ? '' : 'grayscale'}`}>
+                  {achievementItem.icon}
                 </div>
-                <div className="font-bold text-sm">{achievement.title}</div>
-                <div className="text-xs opacity-75 mt-1">{achievement.description}</div>
+                <div className="font-bold text-sm">{achievementItem.title}</div>
+                <div className="text-xs opacity-75 mt-1">{achievementItem.description}</div>
                 
-                {achievement.maxProgress && (
+                {achievementItem.maxProgress && (
                   <div className="mt-2">
                     <div className="text-xs">
-                      {achievement.progress || 0} / {achievement.maxProgress}
+                      {achievementItem.progress || 0} / {achievementItem.maxProgress}
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2 mt-1">
                       <div 
                         className="bg-blue-600 h-2 rounded-full transition-all"
                         style={{ 
-                          width: `${((achievement.progress || 0) / achievement.maxProgress) * 100}%` 
+                          width: `${((achievementItem.progress || 0) / achievementItem.maxProgress) * 100}%` 
                         }}
                       />
                     </div>
@@ -882,12 +882,12 @@ export const AchievementPanel: React.FC<AchievementPanelProps> = ({
                 )}
                 
                 <div className="text-xs mt-2 opacity-50 capitalize">
-                  {achievement.rarity} • {achievement.category}
+                  {achievementItem.rarity} • {achievementItem.category}
                 </div>
                 
-                {achievement.unlocked && achievement.unlockedAt && (
+                {achievementItem.unlocked && achievementItem.unlockedAt && (
                   <div className="text-xs opacity-50 mt-1">
-                    Unlocked: {achievement.unlockedAt.toLocaleDateString()}
+                    Unlocked: {achievementItem.unlockedAt.toLocaleDateString()}
                   </div>
                 )}
               </motion.div>

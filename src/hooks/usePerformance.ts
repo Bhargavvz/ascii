@@ -1,34 +1,37 @@
 import { useCallback, useRef } from 'react';
 
+type ThrottledFunction<T extends unknown[]> = (...args: T) => void;
+type DebouncedFunction<T extends unknown[]> = (...args: T) => void;
+
 export const usePerformance = () => {
   const rafRef = useRef<number | undefined>(undefined);
 
-  const throttle = useCallback((func: Function, delay: number) => {
+  const throttle = useCallback(<T extends unknown[]>(func: (...args: T) => void, delay: number): ThrottledFunction<T> => {
     let timeoutId: NodeJS.Timeout;
     let lastExecTime = 0;
     
-    return function (this: any, ...args: any[]) {
+    return function (...args: T) {
       const currentTime = Date.now();
       
       if (currentTime - lastExecTime > delay) {
-        func.apply(this, args);
+        func(...args);
         lastExecTime = currentTime;
       } else {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
-          func.apply(this, args);
+          func(...args);
           lastExecTime = Date.now();
         }, delay - (currentTime - lastExecTime));
       }
     };
   }, []);
 
-  const debounce = useCallback((func: Function, delay: number) => {
+  const debounce = useCallback(<T extends unknown[]>(func: (...args: T) => void, delay: number): DebouncedFunction<T> => {
     let timeoutId: NodeJS.Timeout;
     
-    return function (this: any, ...args: any[]) {
+    return function (...args: T) {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func.apply(this, args), delay);
+      timeoutId = setTimeout(() => func(...args), delay);
     };
   }, []);
 
@@ -54,7 +57,7 @@ export const usePerformance = () => {
   };
 };
 
-export const useVirtualization = (items: any[], containerHeight: number, itemHeight: number) => {
+export const useVirtualization = (items: unknown[], containerHeight: number, itemHeight: number) => {
   const visibleCount = Math.ceil(containerHeight / itemHeight);
   const startIndex = 0; // In a real implementation, this would be calculated based on scroll position
   const endIndex = Math.min(startIndex + visibleCount, items.length);

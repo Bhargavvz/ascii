@@ -96,6 +96,8 @@ const NotFoundPage = () => {
 
   const matrixRain = () => {
     const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+    
     return Array.from({ length: 20 }, (_, i) => (
       <motion.div
         key={i}
@@ -105,7 +107,7 @@ const NotFoundPage = () => {
           top: '-20px'
         }}
         animate={{
-          y: window.innerHeight + 20,
+          y: screenHeight + 20,
           opacity: [0, 1, 1, 0]
         }}
         transition={{

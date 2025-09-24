@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://bhavana-portfolio.vercel.app'),
   title: "Bhavana Portfolio - ASCII Terminal",
   description: "Interactive ASCII art portfolio showcasing projects through command-line interface. Built with Next.js, TypeScript, and FIGlet.",
   keywords: "portfolio, developer, ASCII art, terminal, command line, full stack, Next.js",

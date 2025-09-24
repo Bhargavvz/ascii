@@ -421,6 +421,7 @@ export const useAchievements = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Initialize visit tracking
@@ -431,6 +432,7 @@ export const useAchievements = () => {
     if (visits >= 5) {
       updateProgress('persistent_visitor', visits);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Early bird and night owl checker
@@ -447,6 +449,7 @@ export const useAchievements = () => {
     checkTimeBasedAchievements();
     const interval = setInterval(checkTimeBasedAchievements, 60000); // Check every minute
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Session time checker
@@ -459,6 +462,7 @@ export const useAchievements = () => {
     }, 30000); // Check every 30 seconds
 
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionStartTime]);
 
   const unlockAchievement = useCallback((achievementId: string) => {
@@ -692,8 +696,7 @@ interface AchievementNotificationProps {
 
 export const AchievementNotification: React.FC<AchievementNotificationProps> = ({
   achievement,
-  onDismiss,
-  theme
+  onDismiss
 }) => {
   useEffect(() => {
     if (achievement) {
@@ -738,16 +741,6 @@ export const AchievementNotification: React.FC<AchievementNotificationProps> = (
 };
 
 // Achievement Panel Component
-interface TutorialSystemProps {
-  isVisible: boolean;
-  onToggle: () => void;
-  theme: string;
-  onCommandSuggestion: (command: string) => void;
-  onTutorialCompleted?: () => void;
-}
-
-type GameAchievementCallback = (achievement: string) => void;
-
 interface AchievementPanelProps {
   isVisible: boolean;
   onToggle: () => void;

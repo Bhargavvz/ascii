@@ -31,6 +31,16 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
     ╚═══════════════════════════════════════╝
   `;
 
+  const mobileAsciiLoader = `
+    ╔════════════════════╗
+    ║                    ║
+    ║    [█] [█] [█]     ║
+    ║                    ║
+    ║   P O R T F O L I O ║
+    ║                    ║
+    ╚════════════════════╝
+  `;
+
   useEffect(() => {
     const timer = setInterval(() => {
       setProgress(prev => {
@@ -56,7 +66,8 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
   }, []);
 
   const createProgressBar = (percentage: number) => {
-    const totalBlocks = 30;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const totalBlocks = isMobile ? 15 : 30;
     const filledBlocks = Math.floor((percentage / 100) * totalBlocks);
     const emptyBlocks = totalBlocks - filledBlocks;
     return '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
@@ -64,39 +75,43 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
 
   return (
     <motion.div 
-      className="fixed inset-0 bg-black text-green-400 font-mono flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black text-green-400 font-mono flex items-center justify-center z-50 p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="text-center">
+      <div className="text-center w-full max-w-lg">
         <motion.pre
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="text-xs sm:text-sm text-green-300 mb-8"
+          className="text-xs sm:text-sm md:text-base text-green-300 mb-4 sm:mb-8 overflow-x-auto"
         >
-          {asciiLoader}
+          <div className="hidden sm:block">{asciiLoader}</div>
+          <div className="block sm:hidden">{mobileAsciiLoader}</div>
         </motion.pre>
         
         <motion.div 
-          className="mb-6"
+          className="mb-4 sm:mb-6 px-2"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="text-sm mb-2">{loadingSteps[loadingStep]}</div>
-          <div className="text-xs mb-4 text-green-300">
-            [{createProgressBar(progress)}] {progress}%
+          <div className="text-xs sm:text-sm mb-2 break-words">{loadingSteps[loadingStep]}</div>
+          <div className="text-xs mb-2 sm:mb-4 text-green-300 overflow-x-auto">
+            <div className="whitespace-nowrap">
+              [{createProgressBar(progress)}] {progress}%
+            </div>
           </div>
         </motion.div>
 
         <motion.div
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
-          className="text-xs text-green-500"
+          className="text-xs sm:text-sm text-green-500 px-2"
         >
-          Press any key to continue...
+          <span className="hidden sm:inline">Press any key to continue...</span>
+          <span className="inline sm:hidden">Tap to continue...</span>
         </motion.div>
       </div>
     </motion.div>

@@ -46,7 +46,7 @@ export interface Command {
 }
 
 export interface FileSystem {
-  [key: string]: any;
+  [key: string]: FileSystem | null;
 }
 
 export interface TerminalState {

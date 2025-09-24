@@ -625,7 +625,7 @@ export const useAchievements = () => {
     }
   }, []);
 
-  const trackEvent = useCallback((event: string, data?: any) => {
+  const trackEvent = useCallback((event: string, data?: Record<string, unknown>) => {
     switch (event) {
       case 'ai_chat':
         unlockAchievement('ai_chatbot');
@@ -641,7 +641,7 @@ export const useAchievements = () => {
         updateProgress('feature_hunter');
         break;
       case 'high_score':
-        if (data?.score >= 100) {
+        if (data && typeof data === 'object' && 'score' in data && typeof data.score === 'number' && data.score >= 100) {
           unlockAchievement('high_scorer');
         }
         break;
@@ -738,6 +738,16 @@ export const AchievementNotification: React.FC<AchievementNotificationProps> = (
 };
 
 // Achievement Panel Component
+interface TutorialSystemProps {
+  isVisible: boolean;
+  onToggle: () => void;
+  theme: string;
+  onCommandSuggestion: (command: string) => void;
+  onTutorialCompleted?: () => void;
+}
+
+type GameAchievementCallback = (achievement: string) => void;
+
 interface AchievementPanelProps {
   isVisible: boolean;
   onToggle: () => void;
@@ -768,7 +778,7 @@ export const AchievementPanel: React.FC<AchievementPanelProps> = ({
   
   const filteredAchievements = selectedCategory === 'all' 
     ? achievements 
-    : achievements.filter(a => a.category === selectedCategory);
+    : achievements.filter((a: Achievement) => a.category === selectedCategory);
 
   const completionPercentage = Math.round((stats.unlockedAchievements / stats.totalAchievements) * 100);
 
@@ -839,7 +849,7 @@ export const AchievementPanel: React.FC<AchievementPanelProps> = ({
         {/* Achievements Grid */}
         <div className="flex-1 p-4 overflow-y-auto">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredAchievements.map(achievement => (
+            {filteredAchievements.map((achievement: Achievement) => (
               <motion.div
                 key={achievement.id}
                 className={`border-2 ${

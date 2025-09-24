@@ -13,15 +13,7 @@ export const generateASCIIText = async (
   options: ASCIIArtOptions = {}
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const opts = {
-      font: options.font || 'ANSI Shadow',
-      horizontalLayout: options.horizontalLayout || 'default',
-      verticalLayout: options.verticalLayout || 'default',
-      width: options.width || 80,
-      whitespaceBreak: options.whitespaceBreak || true,
-    };
-
-    figlet.text(text, opts as any, (err, data) => {
+    figlet.text(text, options.font || 'ANSI Shadow', (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -38,7 +30,7 @@ export const createSkillBar = (skill: string, percentage: number, maxWidth: numb
   return `${skill.padEnd(15)} ${bar} ${percentage}%`;
 };
 
-export const createTreeStructure = (structure: any, prefix: string = '', isLast: boolean = true): string => {
+export const createTreeStructure = (structure: Record<string, unknown>, prefix: string = ''): string => {
   let result = '';
   const keys = Object.keys(structure);
   
@@ -50,7 +42,7 @@ export const createTreeStructure = (structure: any, prefix: string = '', isLast:
     result += prefix + connector + key + '\n';
     
     if (typeof structure[key] === 'object' && structure[key] !== null) {
-      result += createTreeStructure(structure[key], nextPrefix, isLastItem);
+      result += createTreeStructure(structure[key] as Record<string, unknown>, nextPrefix);
     }
   });
   

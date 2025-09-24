@@ -1,11 +1,16 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+
+interface ApiResponse {
+  success: boolean;
+  message: string;
+}
 
 // You'll need to add your Gemini API key to environment variables
 const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || '';
 
 class GeminiService {
   private genAI: GoogleGenerativeAI | null = null;
-  private model: any = null;
+  private model: GenerativeModel | null = null;
   private isInitialized = false;
 
   constructor() {
@@ -37,7 +42,7 @@ class GeminiService {
   }
 
   // Method to test API key validity
-  async testConnection(): Promise<{ success: boolean; message: string }> {
+  async testConnection(): Promise<ApiResponse> {
     if (!this.isInitialized || !this.model) {
       return {
         success: false,
@@ -52,14 +57,16 @@ class GeminiService {
         success: true,
         message: 'API connection successful'
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       let message = 'Connection failed';
-      if (error.message?.includes('API_KEY_INVALID')) {
-        message = 'Invalid API key';
-      } else if (error.message?.includes('PERMISSION_DENIED')) {
-        message = 'API key lacks permissions. Enable Generative Language API.';
-      } else if (error.message?.includes('QUOTA_EXCEEDED')) {
-        message = 'API quota exceeded';
+      if (error instanceof Error) {
+        if (error.message?.includes('API_KEY_INVALID')) {
+          message = 'Invalid API key';
+        } else if (error.message?.includes('PERMISSION_DENIED')) {
+          message = 'API key lacks permissions. Enable Generative Language API.';
+        } else if (error.message?.includes('QUOTA_EXCEEDED')) {
+          message = 'API quota exceeded';
+        }
       }
       return {
         success: false,
@@ -86,7 +93,7 @@ class GeminiService {
       `;
 
       const prompt = `${portfolioContext}\n\nUser: ${message}\nAI:`;
-      const result = await this.model.generateContent(prompt);
+      const result = await this.model!.generateContent(prompt);
       const response = await result.response;
       return response.text() || 'Unable to generate response.';
     } catch (error) {
@@ -115,7 +122,7 @@ class GeminiService {
       const prompt = `Generate clean, functional ${language} code for: ${description}. 
       Include comments and follow best practices. Return only the code without explanations.`;
       
-      const result = await this.model.generateContent(prompt);
+      const result = await this.model!.generateContent(prompt);
       const response = await result.response;
       return response.text() || '// Unable to generate code';
     } catch (error) {
@@ -125,6 +132,10 @@ class GeminiService {
   }
 
   async improveCode(code: string, improvement: string): Promise<string> {
+    if (!this.isInitialized || !this.model) {
+      return code;
+    }
+
     try {
       const prompt = `Improve this code: ${improvement}
       
@@ -133,7 +144,7 @@ class GeminiService {
       
       Return only the improved code with comments explaining changes:`;
       
-      const result = await this.model.generateContent(prompt);
+      const result = await this.model!.generateContent(prompt);
       const response = await result.response;
       return response.text() || code;
     } catch (error) {
@@ -143,12 +154,16 @@ class GeminiService {
   }
 
   async generateASCIIArt(description: string): Promise<string> {
+    if (!this.isInitialized || !this.model) {
+      return 'ASCII art generation unavailable';
+    }
+
     try {
       const prompt = `Create simple ASCII art for: ${description}. 
       Use only standard ASCII characters. Keep it under 10 lines and 50 characters wide.
       Return only the ASCII art without explanations.`;
       
-      const result = await this.model.generateContent(prompt);
+      const result = await this.model!.generateContent(prompt);
       const response = await result.response;
       return response.text() || 'Unable to generate ASCII art';
     } catch (error) {
@@ -158,11 +173,15 @@ class GeminiService {
   }
 
   async explainTechnology(tech: string): Promise<string> {
+    if (!this.isInitialized || !this.model) {
+      return 'Technology explanation unavailable';
+    }
+
     try {
       const prompt = `Explain ${tech} in 2-3 short sentences suitable for a developer portfolio. 
       Focus on practical benefits and use cases. Keep it concise and terminal-friendly.`;
       
-      const result = await this.model.generateContent(prompt);
+      const result = await this.model!.generateContent(prompt);
       const response = await result.response;
       return response.text() || 'No explanation available.';
     } catch (error) {
@@ -171,14 +190,18 @@ class GeminiService {
     }
   }
 
-  async generatePortfolioSuggestions(currentContent: any): Promise<string[]> {
+  async generatePortfolioSuggestions(currentContent: Record<string, unknown>): Promise<string[]> {
+    if (!this.isInitialized || !this.model) {
+      return ['Portfolio suggestions unavailable'];
+    }
+
     try {
       const prompt = `Based on this portfolio content, suggest 3 improvements or additions:
       ${JSON.stringify(currentContent, null, 2)}
       
       Return suggestions as a simple bullet-point list.`;
       
-      const result = await this.model.generateContent(prompt);
+      const result = await this.model!.generateContent(prompt);
       const response = await result.response;
       const text = response.text() || '';
       return text.split('\n').filter((line: string) => line.trim().startsWith('•') || line.trim().startsWith('-'));
@@ -189,4 +212,5 @@ class GeminiService {
   }
 }
 
-export default new GeminiService();
+const geminiService = new GeminiService();
+export default geminiService;

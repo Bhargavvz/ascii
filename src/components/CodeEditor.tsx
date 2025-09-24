@@ -31,30 +31,41 @@ greetPortfolioVisitor('Developer');`);
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [editorError, setEditorError] = useState(false);
+  const [editorReady, setEditorReady] = useState(false);
   const editorRef = useRef<any>(null);
 
   const themeColors = getThemeColors(theme);
   const monacoTheme = theme === 'matrix' ? 'vs-dark' : theme === 'amber' ? 'vs-dark' : 'vs-dark';
 
   const handleEditorDidMount = (editor: any) => {
-    editorRef.current = editor;
-    
-    // Add custom keyboard shortcuts
-    editor.addCommand(editor.KeyMod.CtrlCmd | editor.KeyCode.KeyG, () => {
-      generateCodeWithAI();
-    });
-    
-    editor.addCommand(editor.KeyMod.CtrlCmd | editor.KeyCode.KeyI, () => {
-      improveCodeWithAI();
-    });
-    
-    editor.addCommand(editor.KeyMod.CtrlCmd | editor.KeyCode.KeyE, () => {
-      explainCode();
-    });
-    
-    editor.addCommand(editor.KeyMod.CtrlCmd | editor.KeyCode.KeyR, () => {
-      runCode();
-    });
+    try {
+      editorRef.current = editor;
+      setEditorReady(true);
+      setEditorError(false);
+      
+      // Add custom keyboard shortcuts
+      editor.addCommand(editor.KeyMod.CtrlCmd | editor.KeyCode.KeyG, () => {
+        generateCodeWithAI();
+      });
+      
+      editor.addCommand(editor.KeyMod.CtrlCmd | editor.KeyCode.KeyI, () => {
+        improveCodeWithAI();
+      });
+      
+      editor.addCommand(editor.KeyMod.CtrlCmd | editor.KeyCode.KeyE, () => {
+        explainCode();
+      });
+      
+      editor.addCommand(editor.KeyMod.CtrlCmd | editor.KeyCode.KeyR, () => {
+        runCode();
+      });
+      
+      setOutput('Code editor loaded successfully! Try Ctrl+G to generate code.');
+    } catch (error) {
+      console.error('Editor setup failed:', error);
+      setEditorError(true);
+      setOutput('Editor setup failed. Using fallback text editor.');
+    }
   };
 
   const generateCodeWithAI = async () => {
@@ -62,12 +73,19 @@ greetPortfolioVisitor('Developer');`);
     if (!prompt) return;
 
     setIsLoading(true);
+    setOutput('Generating code...');
+    
     try {
       const generatedCode = await GeminiService.generateCode(prompt, language);
-      setCode(generatedCode);
-      setOutput('Code generated successfully!');
+      if (generatedCode && !generatedCode.includes('service not available')) {
+        setCode(generatedCode);
+        setOutput(`Code generated successfully for: "${prompt}"`);
+      } else {
+        setOutput('AI service is not available. Please check your API configuration.');
+      }
     } catch (error) {
-      setOutput('Failed to generate code');
+      console.error('Code generation error:', error);
+      setOutput(`Failed to generate code: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -101,6 +119,24 @@ greetPortfolioVisitor('Developer');`);
       setOutput(explanation);
     } catch (error) {
       setOutput('Failed to explain code');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const testAPI = async () => {
+    setIsLoading(true);
+    setOutput('Testing AI API connection...');
+    
+    try {
+      const result = await GeminiService.testConnection();
+      if (result.success) {
+        setOutput('✅ AI API is working! You can now use AI features.');
+      } else {
+        setOutput(`❌ AI API test failed: ${result.message}\n\nPlease check your API key configuration in the environment variables.`);
+      }
+    } catch (error) {
+      setOutput(`❌ API test error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -218,27 +254,47 @@ console.log(greetUser(user));`,
             <button
               onClick={generateCodeWithAI}
               disabled={isLoading}
-              className={getButtonClass(theme, 'primary')}
+              className={`${getButtonClass(theme, 'primary')} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title="Generate code with AI (Ctrl+G)"
             >
-              Generate (Ctrl+G)
+              {isLoading ? 'Generating...' : 'Generate (Ctrl+G)'}
             </button>
             <button
               onClick={improveCodeWithAI}
               disabled={isLoading}
-              className={getButtonClass(theme, 'primary')}
+              className={`${getButtonClass(theme, 'primary')} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title="Improve existing code (Ctrl+I)"
             >
               Improve (Ctrl+I)
             </button>
             <button
+              onClick={explainCode}
+              disabled={isLoading || !code.trim()}
+              className={`${getButtonClass(theme, 'secondary')} ${(isLoading || !code.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title="Explain current code (Ctrl+E)"
+            >
+              Explain (Ctrl+E)
+            </button>
+            <button
+              onClick={testAPI}
+              disabled={isLoading}
+              className={`${getButtonClass(theme, 'secondary')} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title="Test AI API connection"
+            >
+              Test AI
+            </button>
+            <button
               onClick={runCode}
-              disabled={language !== 'javascript'}
-              className={getButtonClass(theme, 'secondary')}
+              disabled={language !== 'javascript' || !code.trim()}
+              className={`${getButtonClass(theme, 'secondary')} ${(language !== 'javascript' || !code.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title={language !== 'javascript' ? 'Only JavaScript can be executed' : 'Run JavaScript code (Ctrl+R)'}
             >
               Run (Ctrl+R)
             </button>
             <button
               onClick={onToggle}
               className={getButtonClass(theme, 'close')}
+              title="Close code editor"
             >
               ×
             </button>
@@ -256,11 +312,25 @@ console.log(greetUser(user));`,
                 onChange={(value) => setCode(value || '')}
                 onMount={handleEditorDidMount}
                 theme={monacoTheme}
-                loading={<div className="p-4 text-center">Loading Monaco Editor...</div>}
+                loading={
+                  <div className={`p-4 text-center ${themeColors.text}`}>
+                    <div className="mb-2">Loading Monaco Editor...</div>
+                    <div className="text-xs opacity-75">If this takes too long, we'll switch to fallback editor</div>
+                  </div>
+                }
                 onValidate={(markers) => {
                   if (markers.some(marker => marker.severity === 8)) {
                     console.warn('Monaco Editor validation issues:', markers);
                   }
+                }}
+                beforeMount={() => {
+                  // Set a timeout to switch to fallback if Monaco takes too long
+                  setTimeout(() => {
+                    if (!editorReady) {
+                      setEditorError(true);
+                      setOutput('Monaco Editor took too long to load. Using fallback editor.');
+                    }
+                  }, 10000); // 10 second timeout
                 }}
                 options={{
                   minimap: { enabled: false },
@@ -272,15 +342,26 @@ console.log(greetUser(user));`,
                   readOnly: false,
                   quickSuggestions: true,
                   suggestOnTriggerCharacters: true,
+                  contextmenu: true,
+                  scrollbar: {
+                    vertical: 'visible',
+                    horizontal: 'visible'
+                  }
                 }}
               />
             ) : (
-              <textarea
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className={`w-full h-full p-4 font-mono text-sm ${themeColors.bg} ${themeColors.text} resize-none border-none outline-none`}
-                placeholder="// Monaco Editor failed to load. You can still edit code here..."
-              />
+              <div className="h-full flex flex-col">
+                <div className={`p-2 text-xs ${themeColors.text} opacity-75 border-b ${themeColors.border}`}>
+                  Using fallback text editor (Monaco Editor unavailable)
+                </div>
+                <textarea
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  className={`flex-1 p-4 font-mono text-sm ${themeColors.bg} ${themeColors.text} resize-none border-none outline-none`}
+                  placeholder="// Fallback text editor - AI features still available"
+                  spellCheck={false}
+                />
+              </div>
             )}
           </div>
           

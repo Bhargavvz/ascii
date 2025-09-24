@@ -481,6 +481,7 @@ const Terminal: React.FC = () => {
       case 'ide':
         setShowCodeEditor(true);
         addOutput(['Code Editor opened']);
+        trackEvent('code_generated'); // This will unlock the code editor achievement
         break;
         
       case 'games':

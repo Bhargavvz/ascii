@@ -295,11 +295,11 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      className="fixed inset-8 z-50"
+      className="fixed inset-2 sm:inset-4 z-50"
     >
-      <div className={`border-2 ${themeColors.border} rounded-lg overflow-hidden shadow-2xl h-full flex flex-col`}>
+      <div className={`border-2 ${themeColors.border} ${themeColors.bg} rounded-lg overflow-hidden shadow-2xl h-full flex flex-col`}>
         {/* Header */}
-        <div className="px-4 py-2 border-b border-opacity-30 border-white flex items-center justify-between">
+        <div className={`px-4 py-2 border-b ${themeColors.border} flex items-center justify-between ${themeColors.text}`}>
           <h2 className="text-lg font-bold">
             {activeTutorial ? `📖 ${activeTutorial.title}` : '🎓 Interactive Tutorials'}
           </h2>
@@ -308,7 +308,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
 
         {!activeTutorial ? (
           /* Tutorial Selection */
-          <div className="flex-1 p-6 overflow-y-auto">
+          <div className={`flex-1 p-6 overflow-y-auto ${themeColors.text}`}>
             <div className="mb-6">
               <p className="text-sm opacity-75 mb-4">
                 Choose a tutorial to learn how to use this terminal portfolio effectively.
@@ -319,7 +319,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
                 {tutorials.map(tutorial => (
                   <motion.div
                     key={tutorial.id}
-                    className="border border-opacity-30 border-white rounded-lg p-4 hover:bg-opacity-10 hover:bg-white transition-all cursor-pointer"
+                    className={`border ${themeColors.border} rounded-lg p-4 hover:bg-opacity-10 hover:bg-white transition-all cursor-pointer`}
                     onClick={() => startTutorial(tutorial)}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -352,7 +352,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
                 ))}
               </div>
 
-              <div className="mt-6 p-4 border border-opacity-30 border-white rounded-lg">
+              <div className={`mt-6 p-4 border ${themeColors.border} rounded-lg`}>
                 <h3 className="font-bold mb-2">Quick Tips</h3>
                 <ul className="text-sm space-y-1 opacity-75">
                   <li>• Use the up/down arrow keys to browse command history</li>
@@ -365,9 +365,9 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
           </div>
         ) : (
           /* Active Tutorial */
-          <div className="flex-1 flex flex-col">
+          <div className={`flex-1 flex flex-col ${themeColors.text}`}>
             {/* Progress Bar */}
-            <div className="px-4 py-2 border-b border-opacity-30 border-white">
+            <div className={`px-4 py-2 border-b ${themeColors.border}`}>
               <div className="flex items-center justify-between text-sm mb-2">
                 <span>Step {currentStepIndex + 1} of {activeTutorial.steps.length}</span>
                 <span className="opacity-75">
@@ -402,12 +402,12 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
                     <div className="space-y-2">
                       <p className="text-sm font-bold">Try this command:</p>
                       <div className="flex items-center space-x-2">
-                        <code className="bg-opacity-20 bg-white px-3 py-2 rounded font-mono">
+                        <code className={`${themeColors.secondary} px-3 py-2 rounded font-mono`}>
                           {currentStep.command}
                         </code>
                         <button
                           onClick={() => executeCommand(currentStep.command!)}
-                          className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                          className={getButtonClass(theme, 'primary')}
                         >
                           Execute
                         </button>
@@ -441,18 +441,18 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
             </div>
 
             {/* Navigation */}
-            <div className="px-6 py-4 border-t border-opacity-30 border-white flex items-center justify-between">
+            <div className={`px-6 py-4 border-t ${themeColors.border} flex items-center justify-between`}>
               <div className="flex space-x-2">
                 <button
                   onClick={previousStep}
                   disabled={currentStepIndex === 0}
-                  className={`${getButtonClass(theme, 'secondary')} text-sm`}
+                  className={`${getButtonClass(theme, 'secondary')} text-sm ${currentStepIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   ← Previous
                 </button>
                 <button
                   onClick={closeTutorial}
-                  className="px-3 py-1 border border-opacity-30 border-white rounded text-sm hover:bg-opacity-10 hover:bg-white"
+                  className={`px-3 py-1 border ${themeColors.border} rounded text-sm hover:bg-opacity-10 hover:bg-white`}
                 >
                   Exit Tutorial
                 </button>
@@ -460,7 +460,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({
 
               <button
                 onClick={nextStep}
-                className="px-4 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                className={getButtonClass(theme, 'primary')}
               >
                 {currentStepIndex === activeTutorial.steps.length - 1 ? 'Complete' : 'Next →'}
               </button>

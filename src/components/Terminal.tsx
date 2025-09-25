@@ -50,7 +50,8 @@ const Terminal: React.FC = () => {
     trackCommand,
     trackThemeChange,
     trackEvent,
-    dismissNewAchievement
+    dismissNewAchievement,
+    debugUnlockAchievement
   } = useAchievements();
 
   const themes = {
@@ -98,6 +99,9 @@ const Terminal: React.FC = () => {
         '',
         '═'.repeat(80)
       ]);
+      
+      // Track first visit for achievements
+      trackCommand('init', false);
     };
     
     initializeTerminal();
@@ -530,6 +534,32 @@ const Terminal: React.FC = () => {
       case 'gemini-debug':
         setShowGeminiDebug(true);
         addOutput(['Gemini API Debug panel opened']);
+        break;
+
+      case 'achievement-debug':
+      case 'debug-achievements':
+        addOutput([
+          'Achievement Debug Info:',
+          '═'.repeat(50),
+          `Total achievements: ${achievements.length}`,
+          `Unlocked achievements: ${stats.unlockedAchievements}`,
+          `Total score: ${stats.totalScore}`,
+          '',
+          'Recent achievements:',
+          ...achievements.filter(a => a.unlocked).slice(-5).map(a => 
+            `✓ ${a.title} - ${a.description}`
+          ),
+          '',
+          'LocalStorage check:',
+          localStorage.getItem('portfolio-achievements') ? '✓ Achievements data found' : '✗ No achievements data',
+          '',
+          'Test unlock achievement with: unlock-test'
+        ]);
+        break;
+        
+      case 'unlock-test':
+        debugUnlockAchievement('help_seeker');
+        addOutput(['Test achievement unlocked!']);
         break;
         
       case 'features':

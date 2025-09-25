@@ -378,11 +378,29 @@ export const useAchievements = () => {
 
   // Initialize achievements from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('portfolio-achievements');
-    if (saved) {
-      const savedAchievements = JSON.parse(saved);
-      setAchievements(savedAchievements);
-    } else {
+    try {
+      const saved = localStorage.getItem('portfolio-achievements');
+      if (saved) {
+        const savedAchievements = JSON.parse(saved);
+        // Validate that saved achievements have the correct structure
+        if (Array.isArray(savedAchievements) && savedAchievements.length > 0) {
+          // Merge with new achievement definitions in case new ones were added
+          const mergedAchievements = achievementDefinitions.map(def => {
+            const savedAchievement = savedAchievements.find(saved => saved.id === def.id);
+            return savedAchievement || def;
+          });
+          setAchievements(mergedAchievements);
+          console.log('Loaded achievements from localStorage:', mergedAchievements.filter(a => a.unlocked).length, 'unlocked');
+        } else {
+          setAchievements(achievementDefinitions);
+          console.log('Invalid saved data, using default achievements');
+        }
+      } else {
+        setAchievements(achievementDefinitions);
+        console.log('No saved achievements, using defaults');
+      }
+    } catch (error) {
+      console.error('Error loading achievements:', error);
       setAchievements(achievementDefinitions);
     }
   }, []);
@@ -675,6 +693,11 @@ export const useAchievements = () => {
     setNewAchievement(null);
   }, []);
 
+  // Debug function to manually unlock achievements for testing
+  const debugUnlockAchievement = useCallback((achievementId: string) => {
+    unlockAchievement(achievementId);
+  }, [unlockAchievement]);
+
   return {
     achievements,
     stats,
@@ -683,7 +706,8 @@ export const useAchievements = () => {
     trackThemeChange,
     trackEvent,
     unlockAchievement,
-    dismissNewAchievement
+    dismissNewAchievement,
+    debugUnlockAchievement // Export for debugging
   };
 };
 
